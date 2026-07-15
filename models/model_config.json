@@ -1,0 +1,32 @@
+{
+  "model_name": "YOLO11s_FineTuned",
+  "version": "1.0.0",
+  "export_date": "2026-07-15 08:27:19.809910",
+  "classes": {
+    "0": "marine-debris",
+    "1": "Fishing net",
+    "2": "aluminum can",
+    "3": "bottle",
+    "4": "plastic bag",
+    "5": "plastic waste",
+    "6": "tire"
+  },
+  "num_classes": 7,
+  "image_size": 640,
+  "conf_threshold": 0.4,
+  "iou_threshold": 0.45,
+  "metrics": {
+    "mAP50": 0.6338502653848456,
+    "mAP50-95": 0.4370150291444894,
+    "precision": 0.8403166719330178,
+    "recall": 0.6344767684848892
+  },
+  "per_class_ap": {
+    "Fishing net": 0.5050732600732601,
+    "aluminum can": 0.5164267399267399,
+    "bottle": 0.6245017564148856,
+    "plastic bag": 0.6779514066496164,
+    "plastic waste": 0.6704554548761403,
+    "tire": 0.8086929743684309
+  }
+}
