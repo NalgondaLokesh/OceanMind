@@ -4,17 +4,18 @@ AI-Powered Marine Pollution Intelligence using YOLO11s
 
 ## Overview
 
-OceanMind is an advanced computer vision system designed to detect and analyze marine debris in images. Built with YOLO11s and Streamlit, it provides real-time detection, pollution severity assessment, and batch processing capabilities for environmental monitoring.
+OceanMind is an advanced computer vision system designed to detect and analyze marine debris in images. Built with YOLO11s, FastAPI backend, and React frontend, it provides real-time detection, pollution severity assessment, and batch processing capabilities for environmental monitoring.
 
 ## Features
 
 - **Real-time Detection**: Detect marine debris using fine-tuned YOLO11s model
 - **Multiple Debris Classes**: Identifies 6-7 types of marine debris
 - **Pollution Severity Assessment**: Automatic severity scoring (Low, Medium, High, Critical)
-- **Interactive Web Interface**: Beautiful Streamlit dashboard with visualizations
+- **Modern Web Interface**: Beautiful React frontend with TailwindCSS styling
+- **FastAPI Backend**: RESTful API for image detection and analysis
 - **Batch Processing**: Process multiple images simultaneously
 - **Rich Visualizations**: Detection bounding boxes, class distribution charts, and severity gauges
-- **Export Results**: Download detection results as CSV files
+- **Separate Architecture**: Frontend and backend are completely decoupled
 
 ## Model Performance
 
@@ -29,9 +30,10 @@ OceanMind is an advanced computer vision system designed to detect and analyze m
 ### Prerequisites
 
 - Python 3.10 or higher
+- Node.js 16+ and npm
 - CUDA-capable GPU (recommended for faster inference)
 
-### Setup
+### Backend Setup
 
 1. Clone the repository:
 ```bash
@@ -39,24 +41,40 @@ git clone <repository-url>
 cd OceanMind
 ```
 
-2. Install dependencies:
+2. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
 3. Download the model:
-   - Place `oceanmind_best.pt` in the `models/` directory
-   - Or place it in the root directory
+   - Place `oceanmind_best.pt` in the `backend/models/` directory
 
-## Usage
-
-### Running the Web Application
-
+4. Start the FastAPI backend:
 ```bash
-streamlit run app.py
+cd backend
+python main.py
 ```
 
-The application will launch in your browser at `http://localhost:8501`
+The backend API will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install Node.js dependencies:
+```bash
+npm install
+```
+
+3. Start the React development server:
+```bash
+npm start
+```
+
+The frontend will be available at `http://localhost:3000`
 
 ### Using the Detector Programmatically
 
@@ -90,38 +108,64 @@ results = detector.process_batch(
 
 ```
 OceanMind/
-├── app.py                 # Streamlit web application
-├── requirements.txt       # Python dependencies
-├── README.md             # Project documentation
-├── models/               # Model weights directory
-│   └── oceanmind_best.pt
-├── utils/                # Utility modules
-│   └── detector.py       # OceanMindDetector class
-├── uploads/              # User uploaded images
-│   └── samples/          # Sample images for testing
-├── outputs/              # Processed image outputs
-└── assets/               # Static assets
+├── backend/              # FastAPI backend
+│   ├── main.py          # FastAPI application with API endpoints
+│   ├── models/          # Model weights directory
+│   │   └── oceanmind_best.pt
+│   └── utils/           # Utility modules
+│       └── detector.py  # OceanMindDetector class
+├── frontend/            # React frontend
+│   ├── src/
+│   │   ├── components/  # React components
+│   │   │   ├── Header.js
+│   │   │   ├── Sidebar.js
+│   │   │   ├── ImageUpload.js
+│   │   │   ├── DetectionResults.js
+│   │   │   └── ModelInfo.js
+│   │   ├── App.js       # Main React application
+│   │   ├── index.js     # React entry point
+│   │   └── index.css    # Global styles with TailwindCSS
+│   ├── public/
+│   │   └── index.html   # HTML template
+│   ├── package.json     # Node.js dependencies
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+├── requirements.txt     # Python dependencies
+└── README.md           # Project documentation
 ```
+
+## API Endpoints
+
+The FastAPI backend provides the following endpoints:
+
+- `GET /` - API information and available endpoints
+- `GET /health` - Health check endpoint
+- `GET /model-info` - Get model information and performance metrics
+- `POST /settings` - Update detection settings (confidence and IoU thresholds)
+- `POST /detect` - Detect marine debris in a single image
+- `POST /batch-detect` - Detect marine debris in multiple images (max 10)
 
 ## Web Interface Features
 
 ### Single Image Detection
-- Upload images via file uploader
-- Use sample images from the gallery
-- View detection results with bounding boxes
-- Analyze class distribution
-- Monitor pollution severity with gauge charts
+- Upload images via drag-and-drop or file picker
+- Real-time image preview
+- View detection results with annotated bounding boxes
+- Analyze class distribution with interactive charts
+- Monitor pollution severity with color-coded indicators
 
-### Batch Processing
-- Upload multiple images at once
-- Progress tracking during processing
-- Summary table of all results
-- Export results as CSV
-
-### Settings
- - Adjustable confidence threshold (0.1 - 0.9)
+### Settings Panel
+- Adjustable confidence threshold (0.1 - 0.9)
 - Adjustable IoU threshold (0.1 - 0.9)
-- Real-time model performance metrics
+- Real-time model performance metrics display
+- Model information panel
+
+### Detection Results
+- Total items detected
+- Pollution severity assessment (Low, Medium, High, Critical)
+- Detailed detection table with class names and confidence scores
+- Class distribution bar chart
+- Annotated image with bounding boxes
 
 ## Detected Debris Classes
 
@@ -141,13 +185,25 @@ The model can detect various types of marine debris including:
 
 ## Requirements
 
-- streamlit>=1.28.0
+### Backend (Python)
+- fastapi>=0.104.0
+- uvicorn[standard]>=0.24.0
+- python-multipart>=0.0.6
+- pydantic>=2.0.0
 - ultralytics>=8.0.0
 - opencv-python>=4.8.0
 - numpy>=1.24.0
 - pandas>=2.0.0
-- plotly>=5.14.0
 - Pillow>=10.0.0
+
+### Frontend (Node.js)
+- react>=18.2.0
+- react-dom>=18.2.0
+- react-scripts>=5.0.1
+- axios>=1.6.0
+- lucide-react>=0.294.0
+- recharts>=2.10.0
+- tailwindcss>=3.3.0
 
 ## Contributing
 
@@ -160,8 +216,9 @@ This project is licensed under the MIT License.
 ## Acknowledgments
 
 - Built with [Ultralytics YOLO11](https://github.com/ultralytics/ultralytics)
-- Web interface powered by [Streamlit](https://streamlit.io/)
-- Visualizations using [Plotly](https://plotly.com/)
+- Backend powered by [FastAPI](https://fastapi.tiangolo.com/)
+- Frontend built with [React](https://reactjs.org/) and [TailwindCSS](https://tailwindcss.com/)
+- Visualizations using [Recharts](https://recharts.org/)
 
 ---
 
